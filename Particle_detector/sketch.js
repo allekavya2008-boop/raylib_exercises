@@ -33,6 +33,7 @@ function draw() {
     r.BeginDrawing()
     r.ClearBackground(r.BLACK);
 
+    r.DrawRectangle(WIDTH / 4, 0, 40, HEIGHT, r.BLUE);
     r.DrawRectangle(detector_x, detector_y, 20, HEIGHT, r.WHITE);
 
     r.EndDrawing();
