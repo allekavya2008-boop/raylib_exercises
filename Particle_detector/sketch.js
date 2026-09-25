@@ -5,6 +5,7 @@ const HEIGHT = 200;
 
 let detector_x = 0;
 let detector_y = 0;
+const detectorWidth = 20;
 let flag = 0;
 let target = WIDTH - 20
 
@@ -33,8 +34,11 @@ function draw() {
     r.BeginDrawing()
     r.ClearBackground(r.BLACK);
 
-    r.DrawRectangle(WIDTH / 4, 0, 40, HEIGHT, r.BLUE);
-    r.DrawRectangle(detector_x, detector_y, 20, HEIGHT, r.WHITE);
+    const particle1_x = WIDTH / 4;
+    const particle1_width = detectorWidth * 2;
+
+    r.DrawRectangle(particle1_x, 0, particle1_width, HEIGHT, r.BLUE);
+    r.DrawRectangle(detector_x, detector_y, detectorWidth, HEIGHT, r.WHITE);
 
     r.EndDrawing();
 }
