@@ -30,6 +30,11 @@ function update() {
     detector_x = flag === 0 ? detector_x - 1 : detector_x + 1;
 }
 
+function scannerColor(d_x, p1_x, d_w) {
+    if (d_x + d_w === p1_x) return r.RED;
+    return r.WHITE;
+}
+
 function draw() {
     r.BeginDrawing()
     r.ClearBackground(r.BLACK);
@@ -38,6 +43,7 @@ function draw() {
     const particle1_width = detectorWidth * 2;
 
     r.DrawRectangle(particle1_x, 0, particle1_width, HEIGHT, r.BLUE);
+    detectorColor = scannerColor(detector_x, particle1_x, detectorWidth);
     r.DrawRectangle(detector_x, detector_y, detectorWidth, HEIGHT, r.WHITE);
 
     r.EndDrawing();
