@@ -42,6 +42,7 @@ function teardrop() {
     r.CloseWindow();
 }
 
+
 module.exports = {
     isRunning,
     setup,
