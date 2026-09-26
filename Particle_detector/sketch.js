@@ -30,8 +30,8 @@ function update() {
     detector_x = flag === 0 ? detector_x - 1 : detector_x + 1;
 }
 
-function scannerColor(d_x, p1_x, d_w, p1_w) {
-    if (d_x + d_w > p1_x && d_x < p1_x + p1_w) return r.RED;
+function scannerColor(d_x, p_x, d_w, p_w) {
+    if (d_x + d_w > p_x && d_x < p_x + p_w) return r.RED;
     return r.WHITE;
 }
 
@@ -42,8 +42,17 @@ function draw() {
     const particle1_x = WIDTH / 4;
     const particle1_width = detectorWidth * 2;
 
+    const particle2_x = WIDTH * 0.75;
+    const particle2_width = detectorWidth / 2;
+
     r.DrawRectangle(particle1_x, 0, particle1_width, HEIGHT, r.BLUE);
-    detectorColor = scannerColor(detector_x, particle1_x, detectorWidth, particle1_width);
+    r.DrawRectangle(particle2_x, 0, particle2_width, HEIGHT, r.BLUE);
+
+    color1 = scannerColor(detector_x, particle1_x, detectorWidth, particle1_width);
+    color2 = scannerColor(detector_x, particle2_x, detectorWidth, particle2_width);
+
+    detectorColor = color1 === r.RED || color2 === r.RED ? r.RED : r.WHITE;
+
     r.DrawRectangle(detector_x, detector_y, detectorWidth, HEIGHT, detectorColor);
 
     r.EndDrawing();
