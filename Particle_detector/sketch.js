@@ -29,10 +29,6 @@ const PARTICLE1_WIDTH = SCANNER_WIDTH * 2;
 const PARTICLE2_X = WIDTH * 0.75;
 const PARTICLE2_WIDTH = SCANNER_WIDTH / 2;
 
-// let flag1 = 0;
-// let flag2 = 1;
-// let flag3 = 1;
-
 function isRunning() {
     return !r.WindowShouldClose();
 }
