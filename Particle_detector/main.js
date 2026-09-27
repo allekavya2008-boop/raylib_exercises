@@ -10,7 +10,7 @@ function loop() {
 function main() {
     sketch.setup();
     loop();
-    sketch.teardrop();
+    sketch.teardown();
 }
 
 main();
