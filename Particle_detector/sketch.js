@@ -1,5 +1,9 @@
 const r = require("raylib");
 
+speed1 = -1;
+speed2 = 2;
+speed3 = -1;
+
 const WIDTH = 300;
 const HEIGHT = 200;
 
@@ -25,9 +29,9 @@ const PARTICLE1_WIDTH = SCANNER_WIDTH * 2;
 const PARTICLE2_X = WIDTH * 0.75;
 const PARTICLE2_WIDTH = SCANNER_WIDTH / 2;
 
-let flag1 = 0;
-let flag2 = 1;
-let flag3 = 1;
+// let flag1 = 0;
+// let flag2 = 1;
+// let flag3 = 1;
 
 function isRunning() {
     return !r.WindowShouldClose();
@@ -38,23 +42,14 @@ function setup() {
     r.SetTargetFPS(90);
 }
 
-function direction(x, start, end, flag) {
-    if (x === end && flag === 1) {
-        flag = 0;
-    }
-    if (x === start && flag === 0) {
-        flag = 1;
-    }
-    return flag;
-}
-
-function moveDetector(flag, speed, instructor) {
-    return flag === instructor ? -speed : +speed;
-}
-
 function scannerColor(d_x, p_x, d_w, p_w, start) {
     if (d_x + d_w > p_x && d_x < p_x + p_w && p_x >= start) return r.RED;
     return r.WHITE;
+}
+
+function moveDetector(movingPoint, start, end, speed) {
+    if (movingPoint === start || movingPoint === end) return -speed;
+    return speed;
 }
 
 function update() {
@@ -62,18 +57,18 @@ function update() {
     color1 = scannerColor(horizontalScanner1_x, PARTICLE1_X, SCANNER_WIDTH, PARTICLE1_WIDTH, 0);
     color2 = scannerColor(horizontalScanner1_x, PARTICLE2_X, SCANNER_WIDTH, PARTICLE2_WIDTH, 0);
     horizontalScanner1_color = color1 === r.RED || color2 === r.RED ? r.RED : r.WHITE;
-    flag1 = direction(horizontalScanner1_x, 0, WIDTH / 2 - SCANNER_WIDTH, flag1);
-    horizontalScanner1_x += moveDetector(flag1, 1, 0);
+    speed1 = moveDetector(horizontalScanner1_x, 0, WIDTH / 2 - SCANNER_WIDTH, speed1);
+    horizontalScanner1_x += speed1;
 
     color1 = scannerColor(horizontalScaner2_x, PARTICLE1_X, SCANNER_WIDTH, PARTICLE1_WIDTH, WIDTH / 2);
     color2 = scannerColor(horizontalScaner2_x, PARTICLE2_X, SCANNER_WIDTH, PARTICLE2_WIDTH, WIDTH / 2);
     horizontalScanner2_color = color1 === r.RED || color2 === r.RED ? r.RED : r.WHITE;
-    flag2 = direction(horizontalScaner2_x, WIDTH - SCANNER_WIDTH, WIDTH / 2, flag2);
-    horizontalScaner2_x += moveDetector(flag2, 2, 1);
+    speed2 = moveDetector(horizontalScaner2_x, WIDTH - SCANNER_WIDTH, WIDTH / 2, speed2);
+    horizontalScaner2_x += speed2;
 
     verticleScannerColor = scannerColor(verticleScannerY, H_PARTICLE_Y, SCANNER_WIDTH, H_PARTICLE_HEIGHT, 0);
-    flag3 = direction(verticleScannerY, 0, HEIGHT - SCANNER_WIDTH, flag3);
-    verticleScannerY += moveDetector(flag3, 2, 0);
+    speed3 = moveDetector(verticleScannerY, 0, HEIGHT - SCANNER_WIDTH, speed3);
+    verticleScannerY += speed3;
 
 }
 
