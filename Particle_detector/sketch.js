@@ -3,26 +3,38 @@ const r = require("raylib");
 const WIDTH = 300;
 const HEIGHT = 200;
 
-let detector1_x = 0;
-let detector2_x = WIDTH - 20;
-let detector_y = 0;
-const detectorWidth = 20;
+const SCANNER_WIDTH = 20;
+let horizontalScanner1_x = 0;
+let horizontalScaner2_x = WIDTH - SCANNER_WIDTH;
+const HORIZONTAL_SCANNER_Y = 0;
 
-const particle1_x = WIDTH / 4;
-const particle1_width = detectorWidth * 2;
+let horizontalScanner1_color;
+let horizontalScanner2_color;
+let verticleScannerColor;
 
-const particle2_x = WIDTH * 0.75;
-const particle2_width = detectorWidth / 2;
+const VERTICLE_SCANNER_X = 0;
+let verticleScannerY = 0;
+
+const H_PARTICLE_Y = HEIGHT / 2;
+const H_PARTICLE_X = 0;
+const H_PARTICLE_HEIGHT = SCANNER_WIDTH / 2;
+
+const PARTICLE1_X = WIDTH / 4;
+const PARTICLE1_WIDTH = SCANNER_WIDTH * 2;
+
+const PARTICLE2_X = WIDTH * 0.75;
+const PARTICLE2_WIDTH = SCANNER_WIDTH / 2;
 
 let flag1 = 0;
 let flag2 = 1;
+let flag3 = 1;
 
 function isRunning() {
     return !r.WindowShouldClose();
 }
 
 function setup() {
-    r.InitWindow(WIDTH, HEIGHT, "Particle detector");
+    r.InitWindow(WIDTH, HEIGHT, "Particle Scanning");
     r.SetTargetFPS(90);
 }
 
@@ -47,17 +59,21 @@ function scannerColor(d_x, p_x, d_w, p_w, start) {
 
 function update() {
 
-    color1 = scannerColor(detector1_x, particle1_x, detectorWidth, particle1_width, 0);
-    color2 = scannerColor(detector1_x, particle2_x, detectorWidth, particle2_width, 0);
-    detector1_color = color1 === r.RED || color2 === r.RED ? r.RED : r.WHITE;
-    flag1 = direction(detector1_x, 0, WIDTH / 2 - detectorWidth, flag1);
-    detector1_x += moveDetector(flag1, 1, 0);
+    color1 = scannerColor(horizontalScanner1_x, PARTICLE1_X, SCANNER_WIDTH, PARTICLE1_WIDTH, 0);
+    color2 = scannerColor(horizontalScanner1_x, PARTICLE2_X, SCANNER_WIDTH, PARTICLE2_WIDTH, 0);
+    horizontalScanner1_color = color1 === r.RED || color2 === r.RED ? r.RED : r.WHITE;
+    flag1 = direction(horizontalScanner1_x, 0, WIDTH / 2 - SCANNER_WIDTH, flag1);
+    horizontalScanner1_x += moveDetector(flag1, 1, 0);
 
-    color1 = scannerColor(detector2_x, particle1_x, detectorWidth, particle1_width, WIDTH / 2);
-    color2 = scannerColor(detector2_x, particle2_x, detectorWidth, particle2_width, WIDTH / 2);
-    detector2_color = color1 === r.RED || color2 === r.RED ? r.RED : r.WHITE;
-    flag2 = direction(detector2_x, WIDTH - detectorWidth, WIDTH / 2, flag2);
-    detector2_x += moveDetector(flag2, 2, 1);
+    color1 = scannerColor(horizontalScaner2_x, PARTICLE1_X, SCANNER_WIDTH, PARTICLE1_WIDTH, WIDTH / 2);
+    color2 = scannerColor(horizontalScaner2_x, PARTICLE2_X, SCANNER_WIDTH, PARTICLE2_WIDTH, WIDTH / 2);
+    horizontalScanner2_color = color1 === r.RED || color2 === r.RED ? r.RED : r.WHITE;
+    flag2 = direction(horizontalScaner2_x, WIDTH - SCANNER_WIDTH, WIDTH / 2, flag2);
+    horizontalScaner2_x += moveDetector(flag2, 2, 1);
+
+    verticleScannerColor = scannerColor(verticleScannerY, H_PARTICLE_Y, SCANNER_WIDTH, H_PARTICLE_HEIGHT, 0);
+    flag3 = direction(verticleScannerY, 0, HEIGHT - SCANNER_WIDTH, flag3);
+    verticleScannerY += moveDetector(flag3, 2, 0);
 
 }
 
@@ -65,11 +81,15 @@ function draw() {
     r.BeginDrawing()
     r.ClearBackground(r.BLACK);
 
-    r.DrawRectangle(particle1_x, 0, particle1_width, HEIGHT, r.BLUE);
-    r.DrawRectangle(particle2_x, 0, particle2_width, HEIGHT, r.BLUE);
+    r.DrawRectangle(PARTICLE1_X, 0, PARTICLE1_WIDTH, HEIGHT, r.BLUE);
+    r.DrawRectangle(PARTICLE2_X, 0, PARTICLE2_WIDTH, HEIGHT, r.BLUE);
 
-    r.DrawRectangle(detector1_x, detector_y, detectorWidth, HEIGHT, detector1_color);
-    r.DrawRectangle(detector2_x, detector_y, detectorWidth, HEIGHT, detector2_color);
+    r.DrawRectangle(H_PARTICLE_X, H_PARTICLE_Y, WIDTH, H_PARTICLE_HEIGHT, r.BLUE);
+
+    r.DrawRectangle(horizontalScanner1_x, HORIZONTAL_SCANNER_Y, SCANNER_WIDTH, HEIGHT, horizontalScanner1_color);
+    r.DrawRectangle(horizontalScaner2_x, HORIZONTAL_SCANNER_Y, SCANNER_WIDTH, HEIGHT, horizontalScanner2_color);
+
+    r.DrawRectangle(VERTICLE_SCANNER_X, verticleScannerY, WIDTH, SCANNER_WIDTH, verticleScannerColor);
 
     r.EndDrawing();
 }
