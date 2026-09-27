@@ -4,18 +4,20 @@ const WIDTH = 300;
 const HEIGHT = 200;
 
 const SCANNER_WIDTH = 20;
-let horizontalScanner1_x = 0;
-let horizontalScanner2_x = WIDTH - SCANNER_WIDTH;
+
 const HORIZONTAL_SCANNER_Y = 0;
+
+let horizontalScanner1_x = 0;
+let horizontalScanner1_color;
 scanner1_speed = -1;
 
-let horizontalScanner1_color;
+let horizontalScanner2_x = WIDTH - SCANNER_WIDTH;
 let horizontalScanner2_color;
-let verticleScannerColor;
 scanner2_speed = 2;
 
 const VERTICLE_SCANNER_X = 0;
 let verticleScannerY = 0;
+let verticleScannerColor;
 scanner3_speed = -1;
 
 const H_PARTICLE_Y = HEIGHT / 2;
