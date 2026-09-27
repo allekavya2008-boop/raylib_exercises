@@ -26,7 +26,7 @@ function setup() {
     r.SetTargetFPS(90);
 }
 
-function moveDetector1(x, start, end, flag) {
+function direction(x, start, end, flag) {
     if (x === end && flag === 1) {
         flag = 0;
     }
@@ -36,7 +36,7 @@ function moveDetector1(x, start, end, flag) {
     return flag;
 }
 
-function direction(flag, speed, instructor) {
+function moveDetector(flag, speed, instructor) {
     return flag === instructor ? -speed : +speed;
 }
 
@@ -50,14 +50,14 @@ function update() {
     color1 = scannerColor(detector1_x, particle1_x, detectorWidth, particle1_width, 0);
     color2 = scannerColor(detector1_x, particle2_x, detectorWidth, particle2_width, 0);
     detector1_color = color1 === r.RED || color2 === r.RED ? r.RED : r.WHITE;
-    flag1 = moveDetector1(detector1_x, 0, WIDTH / 2 - detectorWidth, flag1);
-    detector1_x += direction(flag1, 1, 0);
+    flag1 = direction(detector1_x, 0, WIDTH / 2 - detectorWidth, flag1);
+    detector1_x += moveDetector(flag1, 1, 0);
 
     color1 = scannerColor(detector2_x, particle1_x, detectorWidth, particle1_width, WIDTH / 2);
     color2 = scannerColor(detector2_x, particle2_x, detectorWidth, particle2_width, WIDTH / 2);
     detector2_color = color1 === r.RED || color2 === r.RED ? r.RED : r.WHITE;
-    flag2 = moveDetector1(detector2_x, WIDTH - detectorWidth, WIDTH / 2, flag2);
-    detector2_x += direction(flag2, 2, 1);
+    flag2 = direction(detector2_x, WIDTH - detectorWidth, WIDTH / 2, flag2);
+    detector2_x += moveDetector(flag2, 2, 1);
 
 }
 
