@@ -7,28 +7,27 @@ const SCANNER_WIDTH = 20;
 
 const HORIZONTAL_SCANNER_Y = 0;
 
-let horizontalScanner1_x = 0;
-let horizontalScanner1_color;
-scanner1_speed = -1;
+let horizontalScanner1_start = 0;
+scanner1_velocity = -1;
 
-let horizontalScanner2_x = WIDTH - SCANNER_WIDTH;
-let horizontalScanner2_color;
-scanner2_speed = 2;
+let horizontalScanner2_start = WIDTH - SCANNER_WIDTH;
+scanner2_velocity = 2;
 
-const VERTICLE_SCANNER_X = 0;
-let verticleScannerY = 0;
-let verticleScannerColor;
-scanner3_speed = -1;
+let verticleScannerStart = 0;
+scanner3_velocity = -1;
 
-const H_PARTICLE_Y = HEIGHT / 2;
-const H_PARTICLE_X = 0;
-const H_PARTICLE_HEIGHT = SCANNER_WIDTH / 2;
-
-const PARTICLE1_X = WIDTH / 4;
+const PARTICLE1_START = WIDTH / 4;
 const PARTICLE1_WIDTH = SCANNER_WIDTH * 2;
 
-const PARTICLE2_X = WIDTH * 0.75;
+const PARTICLE2_START = WIDTH * 0.75;
 const PARTICLE2_WIDTH = SCANNER_WIDTH / 2;
+
+const H_PARTICLE_START = HEIGHT / 2;
+const H_PARTICLE_HEIGHT = SCANNER_WIDTH / 2;
+
+let hasDetected1 = false;
+let hasDetected2 = false;
+let hasDetected3 = false;
 
 function isRunning() {
     return !r.WindowShouldClose();
@@ -39,33 +38,49 @@ function setup() {
     r.SetTargetFPS(90);
 }
 
-function scannerColor(d_x, p_x, d_w, p_w, start) {
-    if (d_x + d_w > p_x && d_x < p_x + p_w && p_x >= start) return r.RED;
-    return r.WHITE;
+function overlaps(start1, s_width, start2, p_width) {
+    const end1 = start1 + s_width;
+    const end2 = start2 + p_width
+    return !(end1 < start2 || start1 > end2)
 }
 
-function moveDetector(movingPoint, start, end, speed) {
-    if (movingPoint === start || movingPoint === end) return -speed;
-    return speed;
+function checkingtwoParticles(s_start, s_width, p1_start, p1_width, p2_start, p2_width) {
+    return overlaps(s_start, s_width, p1_start, p1_width) || overlaps(s_start, s_width, p2_start, p2_width);
+}
+
+function getScannerColor(hasDetected) {
+    return hasDetected ? r.RED : r.WHITE;
+}
+
+function isOutOfBound(movingPoint, start, end) {
+    return movingPoint === start || movingPoint === end;
+}
+
+function changeDetectorVelocity(movingPoint, start, end, velocity) {
+    return isOutOfBound(movingPoint, start, end) ? -velocity : velocity;
+}
+
+function calScannerStart(movingPoint, velocity) {
+    return movingPoint + velocity;
 }
 
 function update() {
 
-    color1 = scannerColor(horizontalScanner1_x, PARTICLE1_X, SCANNER_WIDTH, PARTICLE1_WIDTH, 0);
-    color2 = scannerColor(horizontalScanner1_x, PARTICLE2_X, SCANNER_WIDTH, PARTICLE2_WIDTH, 0);
-    horizontalScanner1_color = color1 === r.RED || color2 === r.RED ? r.RED : r.WHITE;
-    scanner1_speed = moveDetector(horizontalScanner1_x, 0, WIDTH / 2 - SCANNER_WIDTH, scanner1_speed);
-    horizontalScanner1_x += scanner1_speed;
+    hasDetected1 = checkingtwoParticles(horizontalScanner1_start, SCANNER_WIDTH, PARTICLE1_START, PARTICLE1_WIDTH, PARTICLE2_START, PARTICLE2_WIDTH);
 
-    color1 = scannerColor(horizontalScanner2_x, PARTICLE1_X, SCANNER_WIDTH, PARTICLE1_WIDTH, WIDTH / 2);
-    color2 = scannerColor(horizontalScanner2_x, PARTICLE2_X, SCANNER_WIDTH, PARTICLE2_WIDTH, WIDTH / 2);
-    horizontalScanner2_color = color1 === r.RED || color2 === r.RED ? r.RED : r.WHITE;
-    scanner2_speed = moveDetector(horizontalScanner2_x, WIDTH - SCANNER_WIDTH, WIDTH / 2, scanner2_speed);
-    horizontalScanner2_x += scanner2_speed;
+    // scanner1_velocity = changeDetectorVelocity(0, WIDTH, horizontalScanner1_start, SCANNER_WIDTH, scanner1_velocity)
+    scanner1_velocity = changeDetectorVelocity(horizontalScanner1_start, 0, WIDTH / 2 - SCANNER_WIDTH, scanner1_velocity);
+    horizontalScanner1_start = calScannerStart(horizontalScanner1_start, scanner1_velocity);
 
-    verticleScannerColor = scannerColor(verticleScannerY, H_PARTICLE_Y, SCANNER_WIDTH, H_PARTICLE_HEIGHT, 0);
-    scanner3_speed = moveDetector(verticleScannerY, 0, HEIGHT - SCANNER_WIDTH, scanner3_speed);
-    verticleScannerY += scanner3_speed;
+    hasDetected2 = checkingtwoParticles(horizontalScanner1_start, SCANNER_WIDTH, PARTICLE1_START, PARTICLE1_WIDTH, PARTICLE2_START, PARTICLE2_WIDTH);
+
+    scanner2_velocity = changeDetectorVelocity(horizontalScanner2_start, WIDTH - SCANNER_WIDTH, WIDTH / 2, scanner2_velocity);
+    horizontalScanner2_start = calScannerStart(horizontalScanner2_start, scanner2_velocity);
+
+    hasDetected3 = overlaps(verticleScannerStart, SCANNER_WIDTH, H_PARTICLE_START, H_PARTICLE_HEIGHT);
+
+    scanner3_velocity = changeDetectorVelocity(verticleScannerStart, 0, HEIGHT - SCANNER_WIDTH, scanner3_velocity);
+    verticleScannerStart = calScannerStart(verticleScannerStart, scanner3_velocity);
 
 }
 
@@ -73,15 +88,15 @@ function draw() {
     r.BeginDrawing()
     r.ClearBackground(r.BLACK);
 
-    r.DrawRectangle(PARTICLE1_X, 0, PARTICLE1_WIDTH, HEIGHT, r.BLUE);
-    r.DrawRectangle(PARTICLE2_X, 0, PARTICLE2_WIDTH, HEIGHT, r.BLUE);
+    r.DrawRectangle(PARTICLE1_START, 0, PARTICLE1_WIDTH, HEIGHT, r.BLUE);
+    r.DrawRectangle(PARTICLE2_START, 0, PARTICLE2_WIDTH, HEIGHT, r.BLUE);
 
-    r.DrawRectangle(H_PARTICLE_X, H_PARTICLE_Y, WIDTH, H_PARTICLE_HEIGHT, r.BLUE);
+    r.DrawRectangle(0, H_PARTICLE_START, WIDTH, H_PARTICLE_HEIGHT, r.BLUE);
 
-    r.DrawRectangle(horizontalScanner1_x, HORIZONTAL_SCANNER_Y, SCANNER_WIDTH, HEIGHT, horizontalScanner1_color);
-    r.DrawRectangle(horizontalScanner2_x, HORIZONTAL_SCANNER_Y, SCANNER_WIDTH, HEIGHT, horizontalScanner2_color);
+    r.DrawRectangle(horizontalScanner1_start, HORIZONTAL_SCANNER_Y, SCANNER_WIDTH, HEIGHT, getScannerColor(hasDetected1));
+    r.DrawRectangle(horizontalScanner2_start, HORIZONTAL_SCANNER_Y, SCANNER_WIDTH, HEIGHT, getScannerColor(hasDetected2));
 
-    r.DrawRectangle(VERTICLE_SCANNER_X, verticleScannerY, WIDTH, SCANNER_WIDTH, verticleScannerColor);
+    r.DrawRectangle(0, verticleScannerStart, WIDTH, SCANNER_WIDTH, getScannerColor(hasDetected3));
 
     r.EndDrawing();
 }
