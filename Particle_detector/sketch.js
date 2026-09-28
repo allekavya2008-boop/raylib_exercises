@@ -44,7 +44,7 @@ function overlaps(start1, s_width, start2, p_width) {
     return !(end1 < start2 || start1 > end2)
 }
 
-function checkingtwoParticles(s_start, s_width, p1_start, p1_width, p2_start, p2_width) {
+function isOverlapWithTwoParticles(s_start, s_width, p1_start, p1_width, p2_start, p2_width) {
     return overlaps(s_start, s_width, p1_start, p1_width) || overlaps(s_start, s_width, p2_start, p2_width);
 }
 
@@ -52,12 +52,12 @@ function getScannerColor(hasDetected) {
     return hasDetected ? r.RED : r.WHITE;
 }
 
-function isOutOfBound(movingPoint, start, end) {
+function isOutOfBounds(movingPoint, start, end) {
     return movingPoint === start || movingPoint === end;
 }
 
 function changeDetectorVelocity(movingPoint, start, end, velocity) {
-    return isOutOfBound(movingPoint, start, end) ? -velocity : velocity;
+    return isOutOfBounds(movingPoint, start, end) ? -velocity : velocity;
 }
 
 function calScannerStart(movingPoint, velocity) {
@@ -66,13 +66,13 @@ function calScannerStart(movingPoint, velocity) {
 
 function update() {
 
-    hasDetected1 = checkingtwoParticles(horizontalScanner1_start, SCANNER_WIDTH, PARTICLE1_START, PARTICLE1_WIDTH, PARTICLE2_START, PARTICLE2_WIDTH);
+    hasDetected1 = isOverlapWithTwoParticles(horizontalScanner1_start, SCANNER_WIDTH, PARTICLE1_START, PARTICLE1_WIDTH, PARTICLE2_START, PARTICLE2_WIDTH);
 
     // scanner1_velocity = changeDetectorVelocity(0, WIDTH, horizontalScanner1_start, SCANNER_WIDTH, scanner1_velocity)
     scanner1_velocity = changeDetectorVelocity(horizontalScanner1_start, 0, WIDTH / 2 - SCANNER_WIDTH, scanner1_velocity);
     horizontalScanner1_start = calScannerStart(horizontalScanner1_start, scanner1_velocity);
 
-    hasDetected2 = checkingtwoParticles(horizontalScanner1_start, SCANNER_WIDTH, PARTICLE1_START, PARTICLE1_WIDTH, PARTICLE2_START, PARTICLE2_WIDTH);
+    hasDetected2 = isOverlapWithTwoParticles(horizontalScanner1_start, SCANNER_WIDTH, PARTICLE1_START, PARTICLE1_WIDTH, PARTICLE2_START, PARTICLE2_WIDTH);
 
     scanner2_velocity = changeDetectorVelocity(horizontalScanner2_start, WIDTH - SCANNER_WIDTH, WIDTH / 2, scanner2_velocity);
     horizontalScanner2_start = calScannerStart(horizontalScanner2_start, scanner2_velocity);
