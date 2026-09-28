@@ -68,7 +68,6 @@ function update() {
 
     hasDetected1 = isOverlapWithTwoParticles(horizontalScanner1_start, SCANNER_WIDTH, PARTICLE1_START, PARTICLE1_WIDTH, PARTICLE2_START, PARTICLE2_WIDTH);
 
-    // scanner1_velocity = changeDetectorVelocity(0, WIDTH, horizontalScanner1_start, SCANNER_WIDTH, scanner1_velocity)
     scanner1_velocity = changeDetectorVelocity(horizontalScanner1_start, 0, WIDTH / 2 - SCANNER_WIDTH, scanner1_velocity);
     horizontalScanner1_start = calScannerStart(horizontalScanner1_start, scanner1_velocity);
 
